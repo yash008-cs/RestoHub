@@ -1,0 +1,21 @@
+# Root .gitignore
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# Build targets
+**/target/
+**/*.jar
+**/*.war
+
+# Environment secrets
+**/.env
+**/.env.*
+*.log
+
+# Node & Frontend (for future additions)
+**/node_modules/
+**/dist/
+**/build/
