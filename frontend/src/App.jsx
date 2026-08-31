@@ -131,7 +131,7 @@ export function AppContent() {
         }}
       />
 
-      <main className="main-content">
+      <main className={`main-content ${activeTab === 'home' ? 'main-content-home' : ''}`}>
         {activeTab === 'home' && (
           <Home
             onSelectRestaurant={handleSelectRestaurant}

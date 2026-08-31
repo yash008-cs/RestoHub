@@ -11,7 +11,6 @@ import {
   Bike,
   UtensilsCrossed,
   Gift,
-  Sparkles,
 } from 'lucide-react';
 import { restaurantService } from '../services/restaurantService';
 import { foodService } from '../services/foodService';
@@ -102,90 +101,106 @@ export const Home = ({
   };
 
   return (
-    <div className="reference-home-wrapper">
-      {/* 1. Main Hero Canvas (Matching Reference Design) */}
-      <section className="reference-hero-section">
-        <div className="reference-hero-container">
-          <div className="reference-hero-grid">
-            {/* Left Area: Headline, Subtitle, CTA Button & Floating Feature Cards */}
-            <div className="reference-hero-left">
-              <div className="hero-typography-block">
-                <h1 className="reference-hero-title">
-                  Delicious <span className="text-highlight-orange">Food</span>,<br />
-                  Delivered <span className="text-highlight-orange">Fast</span>
+    <div className="ref-full-page-wrapper">
+      {/* 1. Main Reference Hero Card Showcase */}
+      <section className="ref-hero-card-section">
+        <div className="ref-hero-main-card">
+          <div className="ref-hero-two-col-grid">
+            {/* Left Column: Headline, Description, CTA, and 3 Floating Cards */}
+            <div className="ref-hero-left-column">
+              <div className="ref-hero-text-group">
+                <h1 className="ref-hero-headline">
+                  Delicious <span className="ref-orange-text">Food</span>,<br />
+                  Delivered <span className="ref-orange-text">Fast</span>
                 </h1>
 
-                <p className="reference-hero-subtext">
+                <p className="ref-hero-paragraph">
                   Order your favorite dishes from top restaurants in town. We deliver deliciousness to your doorstep. Hungry for convenience? <strong>Let's get started!</strong>
                 </p>
 
-                <div className="hero-cta-action-row">
+                <div className="ref-hero-cta-wrapper">
                   <button
-                    className="reference-hero-cta-btn"
+                    className="ref-hero-cta-button"
                     onClick={onNavigateRestaurants}
                   >
                     <span>Explore Restaurants</span>
-                    <ArrowRight size={20} className="cta-arrow-icon" />
+                    <ArrowRight size={18} className="ref-cta-arrow" />
                   </button>
                 </div>
               </div>
 
-              {/* 3 Floating Feature Cards (Bottom Left) */}
-              <div className="hero-feature-cards-row">
+              {/* 3 Floating Feature Cards (Bottom-Left) */}
+              <div className="ref-feature-cards-container">
                 {/* Card 1: Fast Delivery */}
-                <div className="hero-feature-card card-delivery">
-                  <div className="feature-icon-wrapper">
-                    <Bike size={24} className="feature-icon" />
+                <div className="ref-feature-card card-1">
+                  <div className="ref-feature-icon-box">
+                    <svg viewBox="0 0 48 48" width="28" height="28" fill="none">
+                      {/* Delivery Scooter SVG matching reference style */}
+                      <circle cx="14" cy="34" r="6" stroke="#FC8019" strokeWidth="3.5" fill="#FFEFE5" />
+                      <circle cx="34" cy="34" r="6" stroke="#FC8019" strokeWidth="3.5" fill="#FFEFE5" />
+                      <path d="M14 34 H24 L30 22 H36" stroke="#FC8019" strokeWidth="3.5" strokeLinecap="round" />
+                      <path d="M22 22 H14 V16 H22 Z" fill="#FC8019" />
+                      <path d="M30 22 L33 14 H37" stroke="#FC8019" strokeWidth="3.5" strokeLinecap="round" />
+                    </svg>
                   </div>
-                  <div className="feature-card-content">
-                    <h3 className="feature-card-title">Fast Delivery</h3>
-                    <p className="feature-card-desc">On-time delivery at your doorstep</p>
+                  <div className="ref-feature-text-box">
+                    <h3 className="ref-feature-title">Fast Delivery</h3>
+                    <p className="ref-feature-desc">On-time delivery at your doorstep</p>
                   </div>
                 </div>
 
                 {/* Card 2: Exclusive Menus */}
-                <div className="hero-feature-card card-menus">
-                  <div className="feature-icon-wrapper">
-                    <UtensilsCrossed size={24} className="feature-icon" />
+                <div className="ref-feature-card card-2">
+                  <div className="ref-feature-icon-box">
+                    <svg viewBox="0 0 48 48" width="26" height="26" fill="none">
+                      {/* Fork and Knife SVG */}
+                      <path d="M16 10 V22 C16 26 22 26 22 22 V10" stroke="#FC8019" strokeWidth="3.5" strokeLinecap="round" />
+                      <line x1="19" y1="10" x2="19" y2="38" stroke="#FC8019" strokeWidth="3.5" strokeLinecap="round" />
+                      <path d="M29 10 C29 10 35 12 35 24 V38 H29 V10 Z" fill="#FC8019" />
+                    </svg>
                   </div>
-                  <div className="feature-card-content">
-                    <h3 className="feature-card-title">Exclusive Menus</h3>
-                    <p className="feature-card-desc">Special dishes & exclusive offers</p>
+                  <div className="ref-feature-text-box">
+                    <h3 className="ref-feature-title">Exclusive Menus</h3>
+                    <p className="ref-feature-desc">Special dishes & exclusive offers</p>
                   </div>
                 </div>
 
                 {/* Card 3: Loyalty Rewards */}
-                <div className="hero-feature-card card-rewards">
-                  <div className="feature-icon-wrapper">
-                    <Gift size={24} className="feature-icon" />
+                <div className="ref-feature-card card-3">
+                  <div className="ref-feature-icon-box">
+                    <svg viewBox="0 0 48 48" width="26" height="26" fill="none">
+                      {/* Gift Box SVG */}
+                      <rect x="10" y="20" width="28" height="20" rx="3" fill="#FC8019" />
+                      <rect x="8" y="14" width="32" height="6" rx="2" fill="#FA631C" />
+                      <line x1="24" y1="14" x2="24" y2="40" stroke="#FFEFE5" strokeWidth="3.5" />
+                      <path d="M24 14 C20 8 14 10 17 14 Z M24 14 C28 8 34 10 31 14 Z" fill="#FA631C" stroke="#FA631C" strokeWidth="1.5" />
+                    </svg>
                   </div>
-                  <div className="feature-card-content">
-                    <h3 className="feature-card-title">Loyalty Rewards</h3>
-                    <p className="feature-card-desc">Earn points & enjoy exciting rewards</p>
+                  <div className="ref-feature-text-box">
+                    <h3 className="ref-feature-title">Loyalty Rewards</h3>
+                    <p className="ref-feature-desc">Earn points & enjoy exciting rewards</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right Area: 3D Photorealistic Food Composition */}
-            <div className="reference-hero-right">
-              <div className="hero-3d-food-stage">
-                <div className="food-3d-glow-backdrop" />
+            {/* Right Column: 3D Photorealistic Food Composition */}
+            <div className="ref-hero-right-column">
+              <div className="ref-hero-food-stage">
                 <img
                   src="/hero-3d-food.jpg"
-                  alt="Delicious burger, fries, pizza, and sushi"
-                  className="hero-3d-food-render"
+                  alt="Delicious 3D Cheeseburger, French Fries, Pizza, and Sushi"
+                  className="ref-hero-food-image"
                   loading="eager"
                 />
-                <div className="hero-food-ground-shadow" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Downstream Content Container */}
-      <div className="home-content-container">
+      {/* Downstream Content Sections */}
+      <div className="ref-downstream-content-wrapper">
         {/* 2. Special Offers Section */}
         <OfferBanner onSelectOffer={onSelectOffer} />
 
