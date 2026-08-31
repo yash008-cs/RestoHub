@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Utensils,
   MapPin,
   Search,
   ShoppingCart,
@@ -9,6 +8,7 @@ import {
   Heart,
   LogOut,
   ChevronDown,
+  Compass,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -62,8 +62,14 @@ export const Navbar = ({
       <div className="zepto-navbar-container">
         {/* Left Side: Brand Logo + Location Selector */}
         <div className="navbar-left-group">
-          <div className="brand-logo-box" onClick={() => setActiveTab('home')}>
-            <img src="/restohub-logo.png" alt="RestoHub Logo" className="navbar-logo-img" />
+          <div className="brand-logo-box" onClick={() => setActiveTab('home')} role="button" tabIndex={0}>
+            <div className="navbar-brand-icon-cloche">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a2 2 0 0 0-2 2h4a2 2 0 0 0-2-2z" fill="#FC8019" stroke="#FC8019" />
+                <path d="M4 14a8 8 0 0 1 16 0H4z" fill="#FC8019" fillOpacity="0.15" stroke="#FC8019" />
+                <line x1="2" y1="18" x2="22" y2="18" stroke="#FC8019" strokeWidth="2.5" />
+              </svg>
+            </div>
             <span className="brand-name-text">RestoHub</span>
           </div>
 
@@ -71,17 +77,19 @@ export const Navbar = ({
             className="navbar-location-badge"
             onClick={() => setIsLocationModalOpen(true)}
             title="Change Delivery Location"
+            role="button"
+            tabIndex={0}
           >
-            <MapPin size={16} className="loc-pin" />
+            <MapPin size={15} className="loc-pin" />
             <div className="loc-text-meta">
               <span className="loc-title">Location</span>
               <span className="loc-value">{currentLocation.area || 'Pune'}</span>
             </div>
-            <ChevronDown size={14} className="loc-chevron" />
+            <ChevronDown size={13} className="loc-chevron" />
           </div>
         </div>
 
-        {/* Center: Clean Search Bar */}
+        {/* Center: Search Bar */}
         <div
           className="navbar-center-search"
           onClick={() => {
@@ -90,10 +98,10 @@ export const Navbar = ({
             }
           }}
         >
-          <Search size={18} className="search-icon" />
+          <Search size={17} className="search-icon" />
           <input
             type="text"
-            placeholder="Search for food or restaurants"
+            placeholder="Search for food or restaurants..."
             value={searchQuery || ''}
             onFocus={() => {
               if (activeTab !== 'search') {
@@ -110,6 +118,38 @@ export const Navbar = ({
           />
         </div>
 
+        {/* Navigation Links */}
+        <nav className="navbar-nav-links">
+          <button
+            className={`nav-text-link ${activeTab === 'home' ? 'active' : ''}`}
+            onClick={() => setActiveTab('home')}
+          >
+            Home
+          </button>
+          <button
+            className={`nav-text-link ${activeTab === 'restaurants' ? 'active' : ''}`}
+            onClick={() => setActiveTab('restaurants')}
+          >
+            Menu
+          </button>
+          {isAuthenticated && (
+            <button
+              className={`nav-text-link ${activeTab === 'orders' ? 'active' : ''}`}
+              onClick={() => setActiveTab('orders')}
+            >
+              Orders
+            </button>
+          )}
+          {isAuthenticated && (
+            <button
+              className={`nav-text-link ${activeTab === 'favourites' ? 'active' : ''}`}
+              onClick={() => setActiveTab('favourites')}
+            >
+              Favourites
+            </button>
+          )}
+        </nav>
+
         {/* Right Side: Login / Profile + Cart */}
         <div className="navbar-right-group">
           {/* Login / Profile */}
@@ -120,12 +160,14 @@ export const Navbar = ({
               onMouseEnter={() => setShowProfileDropdown(true)}
               onMouseLeave={() => setShowProfileDropdown(false)}
             >
-              <button className="nav-action-btn" onClick={handleProfileClick} title={activeUser.name}>
-                <User size={20} className="nav-btn-icon" />
+              <button className="nav-action-btn logged-in" onClick={handleProfileClick} title={activeUser.name}>
+                <div className="avatar-circle-nav">
+                  {activeUser.name.charAt(0).toUpperCase()}
+                </div>
                 <span className="nav-btn-label">
                   {activeUser.name.split(' ')[0]}
                 </span>
-                <ChevronDown size={14} className={`nav-chevron ${showProfileDropdown ? 'open' : ''}`} />
+                <ChevronDown size={13} className={`nav-chevron ${showProfileDropdown ? 'open' : ''}`} />
               </button>
 
               {showProfileDropdown && (
@@ -136,32 +178,32 @@ export const Navbar = ({
                     </div>
                     <div className="user-text">
                       <span className="name">{activeUser.name}</span>
+                      <span className="email">{activeUser.email || 'Customer'}</span>
                     </div>
                   </div>
                   <div className="dropdown-line" />
 
                   {/* Customer-Specific Dropdown Items */}
                   <button className="dropdown-link-btn" onClick={() => handleDropdownNavigation('profile')}>
-                    <User size={16} /> <span>My Profile</span>
+                    <User size={15} /> <span>My Profile</span>
                   </button>
                   <button className="dropdown-link-btn" onClick={() => handleDropdownNavigation('orders')}>
-                    <ShoppingBag size={16} /> <span>My Orders</span>
+                    <ShoppingBag size={15} /> <span>My Orders</span>
                   </button>
                   <button className="dropdown-link-btn" onClick={() => handleDropdownNavigation('favourites')}>
-                    <Heart size={16} /> <span>Favourites</span>
+                    <Heart size={15} /> <span>Favourites</span>
                   </button>
 
                   <div className="dropdown-line" />
                   <button className="dropdown-link-btn logout" onClick={handleLogout}>
-                    <LogOut size={16} /> <span>Logout</span>
+                    <LogOut size={15} /> <span>Logout</span>
                   </button>
                 </div>
               )}
             </div>
           ) : (
-            <button className="nav-action-btn" onClick={() => openLogin('login')} title="Login">
-              <User size={20} className="nav-btn-icon" />
-              <span className="nav-btn-label">Login</span>
+            <button className="navbar-login-pill-btn" onClick={() => openLogin('login')} title="Log In">
+              Log In
             </button>
           )}
 
@@ -175,9 +217,10 @@ export const Navbar = ({
               }
               setActiveTab('cart');
             }}
+            title="Shopping Cart"
           >
             <div className="cart-icon-box">
-              <ShoppingCart size={20} />
+              <ShoppingCart size={18} />
               {totalCount > 0 && <span className="cart-badge-count">{totalCount}</span>}
             </div>
             <span className="cart-btn-label">Cart</span>

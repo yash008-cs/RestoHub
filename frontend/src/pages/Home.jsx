@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Star, MapPin, ArrowRight, Plus, Minus, Heart, Clock, Utensils } from 'lucide-react';
+import {
+  Search,
+  Star,
+  MapPin,
+  ArrowRight,
+  Plus,
+  Minus,
+  Heart,
+  Clock,
+  Bike,
+  UtensilsCrossed,
+  Gift,
+  Sparkles,
+} from 'lucide-react';
 import { restaurantService } from '../services/restaurantService';
 import { foodService } from '../services/foodService';
 import { useCart } from '../context/CartContext';
@@ -8,9 +21,22 @@ import { OfferBanner } from '../components/common/OfferBanner';
 import { CategoryBar } from '../components/common/CategoryBar';
 import { RealisticFire } from '../components/common/RealisticFire';
 import { formatCurrency } from '../utils/formatters';
-import { getRestaurantImage, getFoodImage, handleImageError, FALLBACK_RESTAURANT_IMAGE, FALLBACK_FOOD_IMAGE } from '../utils/imageMapper';
+import {
+  getRestaurantImage,
+  getFoodImage,
+  handleImageError,
+  FALLBACK_RESTAURANT_IMAGE,
+  FALLBACK_FOOD_IMAGE,
+} from '../utils/imageMapper';
 
-export const Home = ({ onSelectRestaurant, onNavigateRestaurants, onNavigateSearch, onSelectOffer, searchQuery, setSearchQuery }) => {
+export const Home = ({
+  onSelectRestaurant,
+  onNavigateRestaurants,
+  onNavigateSearch,
+  onSelectOffer,
+  searchQuery,
+  setSearchQuery,
+}) => {
   const { addToCart, updateQuantity, cartItems } = useCart();
   const { toggleFavouriteRestaurant, isRestaurantFavourite } = useFavourites();
 
@@ -76,36 +102,89 @@ export const Home = ({ onSelectRestaurant, onNavigateRestaurants, onNavigateSear
   };
 
   return (
-    <div className="zepto-home-page">
-      {/* 1. Welcome / Hero Section */}
-      <section className="compact-welcome-hero">
-        <div className="hero-text-container">
-          <span className="hero-location-tag">📍 PUNE, MAHARASHTRA</span>
-          <h1 className="hero-main-title">Craving Something Delicious?</h1>
-          <p className="hero-subtext">
-            Explore Pune's top-rated restaurants & signature gourmet dishes delivered in minutes.
-          </p>
+    <div className="reference-home-wrapper">
+      {/* 1. Main Hero Canvas (Matching Reference Design) */}
+      <section className="reference-hero-section">
+        <div className="reference-hero-container">
+          <div className="reference-hero-grid">
+            {/* Left Area: Headline, Subtitle, CTA Button & Floating Feature Cards */}
+            <div className="reference-hero-left">
+              <div className="hero-typography-block">
+                <h1 className="reference-hero-title">
+                  Delicious <span className="text-highlight-orange">Food</span>,<br />
+                  Delivered <span className="text-highlight-orange">Fast</span>
+                </h1>
 
-          <div
-            className="hero-search-box"
-            onClick={() => onNavigateSearch && onNavigateSearch()}
-          >
-            <Search size={20} className="hero-search-icon" />
-            <input
-              type="text"
-              placeholder="Search for food, biryani, burgers, or restaurants..."
-              value={localSearch}
-              onFocus={() => onNavigateSearch && onNavigateSearch()}
-              onChange={(e) => {
-                setLocalSearch(e.target.value);
-                if (onNavigateSearch) onNavigateSearch();
-              }}
-              className="hero-search-input"
-            />
+                <p className="reference-hero-subtext">
+                  Order your favorite dishes from top restaurants in town. We deliver deliciousness to your doorstep. Hungry for convenience? <strong>Let's get started!</strong>
+                </p>
+
+                <div className="hero-cta-action-row">
+                  <button
+                    className="reference-hero-cta-btn"
+                    onClick={onNavigateRestaurants}
+                  >
+                    <span>Explore Restaurants</span>
+                    <ArrowRight size={20} className="cta-arrow-icon" />
+                  </button>
+                </div>
+              </div>
+
+              {/* 3 Floating Feature Cards (Bottom Left) */}
+              <div className="hero-feature-cards-row">
+                {/* Card 1: Fast Delivery */}
+                <div className="hero-feature-card card-delivery">
+                  <div className="feature-icon-wrapper">
+                    <Bike size={24} className="feature-icon" />
+                  </div>
+                  <div className="feature-card-content">
+                    <h3 className="feature-card-title">Fast Delivery</h3>
+                    <p className="feature-card-desc">On-time delivery at your doorstep</p>
+                  </div>
+                </div>
+
+                {/* Card 2: Exclusive Menus */}
+                <div className="hero-feature-card card-menus">
+                  <div className="feature-icon-wrapper">
+                    <UtensilsCrossed size={24} className="feature-icon" />
+                  </div>
+                  <div className="feature-card-content">
+                    <h3 className="feature-card-title">Exclusive Menus</h3>
+                    <p className="feature-card-desc">Special dishes & exclusive offers</p>
+                  </div>
+                </div>
+
+                {/* Card 3: Loyalty Rewards */}
+                <div className="hero-feature-card card-rewards">
+                  <div className="feature-icon-wrapper">
+                    <Gift size={24} className="feature-icon" />
+                  </div>
+                  <div className="feature-card-content">
+                    <h3 className="feature-card-title">Loyalty Rewards</h3>
+                    <p className="feature-card-desc">Earn points & enjoy exciting rewards</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Area: 3D Photorealistic Food Composition */}
+            <div className="reference-hero-right">
+              <div className="hero-3d-food-stage">
+                <div className="food-3d-glow-backdrop" />
+                <img
+                  src="/hero-3d-food.jpg"
+                  alt="Delicious burger, fries, pizza, and sushi"
+                  className="hero-3d-food-render"
+                  loading="eager"
+                />
+                <div className="hero-food-ground-shadow" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* Downstream Content Container */}
       <div className="home-content-container">
         {/* 2. Special Offers Section */}
         <OfferBanner onSelectOffer={onSelectOffer} />
@@ -116,8 +195,8 @@ export const Home = ({ onSelectRestaurant, onNavigateRestaurants, onNavigateSear
           onSelectCategory={handleCategorySelect}
         />
 
-        {/* 4. Popular Restaurants Section */}
-        <section className="popular-restaurants-section">
+        {/* 4. Top Restaurants Section */}
+        <section className="popular-restaurants-section" id="top-restaurants">
           <div className="section-header-flex">
             <div>
               <h2 className="section-main-title">⭐ Top Restaurants in Pune</h2>
