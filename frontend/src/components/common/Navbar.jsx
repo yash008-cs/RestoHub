@@ -46,11 +46,12 @@ export const Navbar = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleProfileClick = () => {
+  const handleProfileClick = (e) => {
+    if (e) e.stopPropagation();
     if (!isAuthenticated) {
       openLogin('login');
     } else {
-      setShowProfileDropdown(!showProfileDropdown);
+      setShowProfileDropdown((prev) => !prev);
     }
   };
 
@@ -188,21 +189,21 @@ export const Navbar = ({
               <div
                 className="ref-user-dropdown-wrap"
                 ref={loginDropdownRef}
-                onMouseEnter={() => setShowProfileDropdown(true)}
-                onMouseLeave={() => setShowProfileDropdown(false)}
               >
                 <button
-                  className="ref-user-pill-btn"
+                  type="button"
+                  className={`ref-user-pill-btn ${showProfileDropdown ? 'active' : ''}`}
                   onClick={handleProfileClick}
-                  title={activeUser.name}
+                  aria-label={`User account: ${activeUser.name}`}
+                  aria-expanded={showProfileDropdown}
                 >
                   <div className="ref-user-avatar">
-                    {activeUser.name.charAt(0).toUpperCase()}
+                    {activeUser.name ? activeUser.name.charAt(0).toUpperCase() : 'U'}
                   </div>
                   <span className="ref-user-name">
-                    {activeUser.name.split(' ')[0]}
+                    {activeUser.name ? activeUser.name.split(' ')[0] : 'User'}
                   </span>
-                  <ChevronDown size={12} className={`ref-chevron ${showProfileDropdown ? 'open' : ''}`} />
+                  <ChevronDown size={13} className={`ref-chevron ${showProfileDropdown ? 'open' : ''}`} />
                 </button>
 
                 {showProfileDropdown && (
@@ -213,7 +214,6 @@ export const Navbar = ({
                       </div>
                       <div className="ref-user-details">
                         <span className="ref-user-fullname">{activeUser.name}</span>
-                        <span className="ref-user-email">{activeUser.email || activeUser.phoneNumber || 'Member'}</span>
                       </div>
                     </div>
                     <div className="ref-dropdown-divider" />

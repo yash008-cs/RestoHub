@@ -81,33 +81,45 @@ public class AuthService {
     }
 
     /**
-     * Customer Login API using Phone Number + BCrypt Password verification
+     * Customer Login API supporting both Email + Password and Phone Number + Password.
      */
     public AuthResponse login(LoginRequest request) {
-        String rawPhone = request.getPhoneNumber();
+        String rawIdentifier = request.getResolvedIdentifier();
         String rawPassword = request.getPassword();
 
-        if (rawPhone == null || rawPhone.isBlank() || rawPassword == null || rawPassword.isBlank()) {
-            throw new IllegalArgumentException("Please enter all required details.");
+        if (rawIdentifier == null || rawIdentifier.isBlank() || rawPassword == null || rawPassword.isBlank()) {
+            throw new IllegalArgumentException("Please enter your email/mobile number and password.");
         }
 
-        String cleanPhone = rawPhone.replaceAll("[^0-9]", "").trim();
-        if (cleanPhone.length() > 10) {
-            cleanPhone = cleanPhone.substring(cleanPhone.length() - 10);
-        }
-        if (cleanPhone.length() != 10) {
-            throw new IllegalArgumentException("Please enter a valid mobile number.");
-        }
+        String identifier = rawIdentifier.trim();
+        Customer customer;
 
-        log.info("Attempting customer login for phone: {}", cleanPhone);
-
-        Customer customer = customerRepository.findByPhone(cleanPhone)
-                .orElseThrow(() -> new ResourceNotFoundException("No account found with this mobile number. Please create an account."));
+        if (identifier.contains("@")) {
+            // Email validation
+            if (!identifier.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                throw new IllegalArgumentException("Please enter a valid email address.");
+            }
+            log.info("Attempting customer login for email: {}", identifier);
+            customer = customerRepository.findByEmailIgnoreCase(identifier)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid email/phone number or password."));
+        } else {
+            // Phone validation
+            String cleanPhone = identifier.replaceAll("[^0-9]", "").trim();
+            if (cleanPhone.length() > 10) {
+                cleanPhone = cleanPhone.substring(cleanPhone.length() - 10);
+            }
+            if (cleanPhone.length() != 10) {
+                throw new IllegalArgumentException("Please enter a valid 10-digit mobile number or email.");
+            }
+            log.info("Attempting customer login for phone: {}", cleanPhone);
+            customer = customerRepository.findByPhone(cleanPhone)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid email/phone number or password."));
+        }
 
         // Verify password against BCrypt hash
         if (!passwordEncoder.matches(rawPassword.trim(), customer.getPassword())) {
-            log.warn("Invalid password for phone number: {}", cleanPhone);
-            throw new IllegalArgumentException("Invalid mobile number or password.");
+            log.warn("Invalid password attempt for identifier: {}", identifier);
+            throw new IllegalArgumentException("Invalid email/phone number or password.");
         }
 
         log.info("Customer logged in successfully: id={}, name={}", customer.getId(), customer.getName());
@@ -119,7 +131,8 @@ public class AuthService {
                 customer.getPhone()
         );
 
-        return new AuthResponse(true, "Logged in successfully!", customerDto, "CUSTOMER", null);
+        String roleStr = customer.getRole() != null ? customer.getRole().name() : "CUSTOMER";
+        return new AuthResponse(true, "Logged in successfully!", customerDto, roleStr, null);
     }
 
     /**

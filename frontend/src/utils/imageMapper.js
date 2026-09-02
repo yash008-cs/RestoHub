@@ -83,7 +83,7 @@ const EXACT_DISH_PHOTOS = [
   },
   {
     keys: ['dal tadka', 'yellow dal', 'dal fry'],
-    url: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=600&q=80' // Golden yellow tempered lentils
+    url: '/dal-tadka.png' // Authentic golden tempered yellow dal with fried red chilies and cumin
   },
   {
     keys: ['chole', 'chana masala', 'rajma', 'chole bhature'],
@@ -94,7 +94,11 @@ const EXACT_DISH_PHOTOS = [
     url: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=600&q=80' // Spiced mixed vegetarian curries
   },
   {
-    keys: ['butter naan', 'garlic naan', 'naan', 'tandoori roti', 'roti', 'paratha', 'kulche'],
+    keys: ['butter naan', 'garlic naan', 'naan'],
+    url: '/butter-naan.png' // Authentic charred golden butter naan brushed with butter and coriander
+  },
+  {
+    keys: ['tandoori roti', 'roti', 'paratha', 'kulche'],
     url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80' // Charred tandoori flatbread
   },
 
@@ -154,8 +158,20 @@ const EXACT_DISH_PHOTOS = [
     url: '/misal-pav-authentic.png' // Real authentic Pune misal pav platter
   },
   {
-    keys: ['vada pav', 'batata vada'],
-    url: 'https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&w=600&q=80' // Golden potato vada inside pav bun with green chili
+    keys: ['vada pav', 'vadapav', 'batata vada', 'wada pav', 'wadapav', 'mumbai vada pav'],
+    url: '/vada-pav-authentic.png' // Authentic Mumbai-Pune Vada Pav with green chutney and fried chili
+  },
+  {
+    keys: ['thalipeeth', 'maharashtrian thalipeeth', 'bhajani thalipeeth'],
+    url: '/thalipeeth.png' // Authentic spiced multigrain savory pancake with fresh butter & chutneys
+  },
+  {
+    keys: ['puran poli', 'puranpoli', 'maharashtrian puran poli'],
+    url: '/puran-poli.png' // Golden sweet flatbread with jaggery-chana dal filling & melting butter
+  },
+  {
+    keys: ['sabudana khichdi', 'sabudana khichadi', 'sabudana'],
+    url: '/sabudana-khichdi.png' // Authentic roasted sago pearls with crunchy peanuts, potatoes & lemon
   },
   {
     keys: ['pav bhaji', 'mumbai pav bhaji', 'cheese pav bhaji'],

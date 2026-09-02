@@ -53,16 +53,39 @@ public class CustomerService {
     }
 
     public CustomerResponse login(LoginRequest request) {
-        String phone = request.getPhoneNumber() != null ? request.getPhoneNumber().trim() : "";
-        String inputPassword = request.getPassword().trim();
-        log.info("Attempting customer login for phone: {}", phone);
+        String rawIdentifier = request.getResolvedIdentifier();
+        String inputPassword = request.getPassword() != null ? request.getPassword().trim() : "";
 
-        Customer customer = customerRepository.findByPhone(phone)
-                .orElseThrow(() -> new ResourceNotFoundException("No account found with mobile number '" + phone + "'. Please create an account."));
+        if (rawIdentifier == null || rawIdentifier.isBlank() || inputPassword.isBlank()) {
+            throw new IllegalArgumentException("Please enter your email/mobile number and password.");
+        }
+
+        String identifier = rawIdentifier.trim();
+        Customer customer;
+
+        if (identifier.contains("@")) {
+            if (!identifier.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                throw new IllegalArgumentException("Please enter a valid email address.");
+            }
+            log.info("Attempting customer login for email: {}", identifier);
+            customer = customerRepository.findByEmailIgnoreCase(identifier)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid email/phone number or password."));
+        } else {
+            String cleanPhone = identifier.replaceAll("[^0-9]", "").trim();
+            if (cleanPhone.length() > 10) {
+                cleanPhone = cleanPhone.substring(cleanPhone.length() - 10);
+            }
+            if (cleanPhone.length() != 10) {
+                throw new IllegalArgumentException("Please enter a valid 10-digit mobile number or email.");
+            }
+            log.info("Attempting customer login for phone: {}", cleanPhone);
+            customer = customerRepository.findByPhone(cleanPhone)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid email/phone number or password."));
+        }
 
         if (!passwordEncoder.matches(inputPassword, customer.getPassword())) {
-            log.warn("Failed login attempt for phone: {} (password mismatch)", phone);
-            throw new IllegalArgumentException("Invalid mobile number or password.");
+            log.warn("Failed login attempt for identifier: {} (password mismatch)", identifier);
+            throw new IllegalArgumentException("Invalid email/phone number or password.");
         }
 
         log.info("Customer successfully authenticated: id={}, phone={}", customer.getId(), customer.getPhone());

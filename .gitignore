@@ -13,6 +13,7 @@
 # Environment secrets
 **/.env
 **/.env.*
+!**/.env.example
 *.log
 
 # Node & Frontend (for future additions)

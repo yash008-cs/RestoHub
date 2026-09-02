@@ -51,12 +51,12 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
-  // Customer Login with Phone Number + Password
-  const login = async (phoneNumber, password) => {
+  // Customer Login with Phone Number or Email + Password
+  const login = async (identifier, password) => {
     setAuthError(null);
     try {
       setLoading(true);
-      const res = await authService.login({ phoneNumber, password });
+      const res = await authService.login({ identifier, password });
       const authenticatedUser = res.customer;
 
       if (authenticatedUser) {
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
       showToast(res.message || 'Logged in successfully', 'success');
       return authenticatedUser;
     } catch (err) {
-      const msg = err.message || 'Invalid mobile number or password.';
+      const msg = err.message || 'Invalid email/mobile number or password.';
       setAuthError(msg);
       throw new Error(msg);
     } finally {

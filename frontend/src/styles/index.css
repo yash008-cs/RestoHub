@@ -3416,8 +3416,9 @@ input, select, textarea {
 }
 .auth-hero-meta {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.65rem;
 }
 .auth-main-title {
   font-size: 2rem;
@@ -4853,35 +4854,48 @@ input, select, textarea {
 .ref-user-pill-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.85rem 0.35rem 0.45rem;
+  gap: 0.55rem;
+  padding: 0.3rem 0.85rem 0.3rem 0.35rem;
   background: #ffffff;
-  border: 1px solid rgba(254, 215, 170, 0.8);
+  border: 1.5px solid #fed7aa;
   border-radius: 9999px;
   cursor: pointer;
-  font-size: 0.88rem;
-  font-weight: 800;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: #0f172a;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  user-select: none;
 }
 
-.ref-user-pill-btn:hover {
-  border-color: #fc8019;
-  background: #fff8f2;
+.ref-user-pill-btn:hover,
+.ref-user-pill-btn.active {
+  border-color: #ea580c;
+  background: #fffaf5;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.12);
 }
 
 .ref-user-avatar {
   width: 28px;
   height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  max-width: 28px;
+  max-height: 28px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   background: linear-gradient(135deg, #fc8019 0%, #ea580c 100%);
-  color: white;
-  font-size: 0.8rem;
-  font-weight: 900;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(234, 88, 12, 0.3);
 }
 
 .ref-chevron {
@@ -4915,15 +4929,26 @@ input, select, textarea {
 }
 
 .ref-user-avatar-lg {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  max-width: 38px;
+  max-height: 38px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   background: linear-gradient(135deg, #fc8019 0%, #ea580c 100%);
-  color: white;
+  color: #ffffff;
+  font-size: 1rem;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(234, 88, 12, 0.25);
 }
 
 .ref-user-details {
@@ -13088,6 +13113,361 @@ p {
   padding-top: 0.9rem;
   border-top: 1px solid #f1f5f9;
 }
+
+/* ==========================================================================
+   APP STORE & GOOGLE PLAY STORE PROMOTIONAL BOX (MATCHING HERO AESTHETIC)
+   ========================================================================== */
+
+.app-download-section-wrap {
+  max-width: 1540px;
+  width: 100%;
+  margin: 3.5rem auto 1.5rem;
+  padding: 0 1.25rem;
+  box-sizing: border-box;
+}
+
+.app-download-box {
+  background: radial-gradient(circle at 88% 18%, rgba(251, 146, 60, 0.16) 0%, transparent 45%),
+              radial-gradient(circle at 12% 85%, rgba(234, 88, 12, 0.09) 0%, transparent 40%),
+              #fbf4eb;
+  border-radius: 36px;
+  border: 1px solid rgba(254, 215, 170, 0.7);
+  box-shadow: 0 20px 50px -12px rgba(180, 100, 60, 0.14), 0 2px 8px rgba(0, 0, 0, 0.02);
+  padding: 3.5rem 4rem;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-box-glow-1 {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(252, 128, 25, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.app-box-glow-2 {
+  position: absolute;
+  bottom: -60px;
+  left: 20%;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.app-download-content {
+  position: relative;
+  z-index: 2;
+}
+
+.app-download-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff8f2;
+  border: 1px solid #fed7aa;
+  color: #ea580c;
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: fit-content;
+  box-shadow: 0 2px 6px rgba(252, 128, 25, 0.08);
+  margin-bottom: 1rem;
+}
+
+.app-badge-icon {
+  color: #ea580c;
+}
+
+.app-download-headline {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+  margin-bottom: 1rem;
+}
+
+.app-headline-accent {
+  color: #ea580c;
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-download-description {
+  font-size: 1rem;
+  color: #64748b;
+  line-height: 1.65;
+  margin-bottom: 1.75rem;
+  max-width: 580px;
+}
+
+.app-perks-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 2.25rem;
+}
+
+.app-perk-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.6rem 0.95rem;
+  border-radius: 14px;
+  border: 1px solid rgba(254, 215, 170, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.app-perk-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #fff7ed;
+  color: #ea580c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.app-perk-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-perk-text strong {
+  font-size: 0.82rem;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.app-perk-text span {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.app-store-buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.store-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 1.4rem;
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.16);
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.store-download-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.28);
+  border-color: rgba(234, 88, 12, 0.6);
+  background: #020617;
+}
+
+.store-download-btn:active {
+  transform: translateY(-1px);
+}
+
+.store-btn-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.store-btn-labels {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.store-btn-sub {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #cbd5e1;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.store-btn-main {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.app-social-proof {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.app-rating-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.app-rating-text {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.app-rating-text strong {
+  color: #0f172a;
+}
+
+/* Right Visual Mockup */
+.app-download-visual-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.app-mockup-frame {
+  position: relative;
+  max-width: 440px;
+  width: 100%;
+  border-radius: 28px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-mockup-image {
+  width: 100%;
+  height: auto;
+  border-radius: 24px;
+  object-fit: cover;
+  box-shadow: 0 16px 40px -10px rgba(180, 100, 60, 0.22);
+  transition: transform 0.4s ease;
+}
+
+.app-download-box:hover .app-mockup-image {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.app-floating-badge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #ffffff;
+  padding: 0.55rem 0.95rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(254, 215, 170, 0.6);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f172a;
+  z-index: 4;
+  backdrop-filter: blur(10px);
+  animation: floatBounce 4s ease-in-out infinite;
+}
+
+.app-floating-badge.top-right {
+  top: 15px;
+  right: -10px;
+  animation-delay: 0s;
+}
+
+.app-floating-badge.bottom-left {
+  bottom: 20px;
+  left: -15px;
+  animation-delay: 2s;
+}
+
+.badge-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: inline-block;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+}
+
+@keyframes floatBounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .app-download-box {
+    grid-template-columns: 1fr;
+    padding: 2.75rem 2.25rem;
+    gap: 2.5rem;
+  }
+  .app-download-visual-wrap {
+    max-width: 380px;
+    margin: 0 auto;
+  }
+  .app-download-headline {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-download-box {
+    padding: 2rem 1.25rem;
+    border-radius: 24px;
+  }
+  .app-download-headline {
+    font-size: 1.65rem;
+  }
+  .app-store-buttons-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .store-download-btn {
+    justify-content: center;
+  }
+  .app-floating-badge.top-right {
+    right: 5px;
+    top: 5px;
+  }
+  .app-floating-badge.bottom-left {
+    left: 5px;
+    bottom: 5px;
+  }
+}
+
 
 
 

@@ -6,6 +6,7 @@ import { LocationProvider, useLocation } from './context/LocationContext';
 import { FavouritesProvider } from './context/FavouritesContext';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
+import { AppDownloadSection } from './components/common/AppDownloadSection';
 import { AuthSlideOver } from './components/auth/AuthSlideOver';
 import { LocationModal } from './components/location/LocationModal';
 import { Toast } from './components/common/Toast';
@@ -209,6 +210,8 @@ export function AppContent() {
           />
         )}
       </main>
+
+      {activeTab !== 'checkout' && <AppDownloadSection />}
 
       <Footer />
 
