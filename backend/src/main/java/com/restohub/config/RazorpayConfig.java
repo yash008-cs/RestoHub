@@ -46,8 +46,8 @@ public class RazorpayConfig {
     @Bean
     public RazorpayClient razorpayClient() throws RazorpayException {
         if (!isConfigured()) {
-            log.warn("Razorpay Test Mode credentials are not fully configured in application.properties / .env");
-            return null;
+            log.warn("Razorpay Test Mode credentials are not fully configured in application.properties / .env - using placeholder client");
+            return new RazorpayClient("rzp_test_placeholder", "placeholder_secret");
         }
         log.info("Initializing RazorpayClient in Test Mode with Key ID: {}", keyId);
         return new RazorpayClient(keyId.trim(), keySecret.trim());

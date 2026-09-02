@@ -103,7 +103,7 @@ export const Navbar = ({
               tabIndex={0}
             >
               <MapPin size={14} className="ref-loc-icon" />
-              <span className="ref-loc-text">{currentLocation.area || 'Pune'}</span>
+              <span className="ref-loc-text">{currentLocation.area || 'Baner, Pune'}</span>
               <ChevronDown size={12} className="ref-loc-arrow" />
             </div>
           </div>
@@ -166,7 +166,7 @@ export const Navbar = ({
               <Search size={15} className="ref-search-icon" />
               <input
                 type="text"
-                placeholder="Search food or restaurant..."
+                placeholder="Search cuisine, dishes or restaurants"
                 value={searchQuery || ''}
                 onFocus={() => {
                   if (activeTab !== 'search') {

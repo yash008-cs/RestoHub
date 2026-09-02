@@ -11,6 +11,9 @@ import {
   Bike,
   UtensilsCrossed,
   Gift,
+  Sun,
+  UserCheck,
+  Users,
 } from 'lucide-react';
 import { restaurantService } from '../services/restaurantService';
 import { foodService } from '../services/foodService';
@@ -105,94 +108,134 @@ export const Home = ({
       {/* 1. Main Reference Hero Card Showcase */}
       <section className="ref-hero-card-section">
         <div className="ref-hero-main-card">
-          <div className="ref-hero-two-col-grid">
-            {/* Left Column: Headline, Description, CTA, and 3 Floating Cards */}
-            <div className="ref-hero-left-column">
-              <div className="ref-hero-text-group">
-                <h1 className="ref-hero-headline">
-                  Delicious <span className="ref-orange-text">Food</span>,<br />
-                  Delivered <span className="ref-orange-text">Fast</span>
-                </h1>
-
-                <p className="ref-hero-paragraph">
-                  Order your favorite dishes from top restaurants in town. We deliver deliciousness to your doorstep. Hungry for convenience? <strong>Let's get started!</strong>
-                </p>
-
-                <div className="ref-hero-cta-wrapper">
-                  <button
-                    className="ref-hero-cta-button"
-                    onClick={onNavigateRestaurants}
-                  >
-                    <span>Explore Restaurants</span>
-                    <ArrowRight size={18} className="ref-cta-arrow" />
-                  </button>
-                </div>
+          {/* Left Column: Top Badge, Headline, Description, CTA, and 3 Feature Cards */}
+          <div className="ref-hero-left-column">
+            <div className="ref-hero-text-group">
+              {/* Top Badge matching reference */}
+              <div className="ref-hero-top-badge">
+                <Sun size={15} className="ref-badge-icon" />
+                <span>Pune's Premium Food Hub</span>
               </div>
 
-              {/* 3 Floating Feature Cards (Bottom-Left) */}
-              <div className="ref-feature-cards-container">
-                {/* Card 1: Fast Delivery */}
-                <div className="ref-feature-card card-1">
-                  <div className="ref-feature-icon-box">
-                    <svg viewBox="0 0 48 48" width="28" height="28" fill="none">
-                      {/* Delivery Scooter SVG matching reference style */}
-                      <circle cx="14" cy="34" r="6" stroke="#FC8019" strokeWidth="3.5" fill="#FFEFE5" />
-                      <circle cx="34" cy="34" r="6" stroke="#FC8019" strokeWidth="3.5" fill="#FFEFE5" />
-                      <path d="M14 34 H24 L30 22 H36" stroke="#FC8019" strokeWidth="3.5" strokeLinecap="round" />
-                      <path d="M22 22 H14 V16 H22 Z" fill="#FC8019" />
-                      <path d="M30 22 L33 14 H37" stroke="#FC8019" strokeWidth="3.5" strokeLinecap="round" />
-                    </svg>
-                  </div>
-                  <div className="ref-feature-text-box">
-                    <h3 className="ref-feature-title">Fast Delivery</h3>
-                    <p className="ref-feature-desc">On-time delivery at your doorstep</p>
-                  </div>
-                </div>
+              <h1 className="ref-hero-headline">
+                <span className="ref-headline-line line-1">
+                  Delicious <span className="ref-orange-text">Food</span>,
+                </span>
+                <span className="ref-headline-line line-2">
+                  Delivered <span className="ref-orange-text">Fast</span>
+                </span>
+              </h1>
 
-                {/* Card 2: Exclusive Menus */}
-                <div className="ref-feature-card card-2">
-                  <div className="ref-feature-icon-box">
-                    <svg viewBox="0 0 48 48" width="26" height="26" fill="none">
-                      {/* Fork and Knife SVG */}
-                      <path d="M16 10 V22 C16 26 22 26 22 22 V10" stroke="#FC8019" strokeWidth="3.5" strokeLinecap="round" />
-                      <line x1="19" y1="10" x2="19" y2="38" stroke="#FC8019" strokeWidth="3.5" strokeLinecap="round" />
-                      <path d="M29 10 C29 10 35 12 35 24 V38 H29 V10 Z" fill="#FC8019" />
-                    </svg>
-                  </div>
-                  <div className="ref-feature-text-box">
-                    <h3 className="ref-feature-title">Exclusive Menus</h3>
-                    <p className="ref-feature-desc">Special dishes & exclusive offers</p>
-                  </div>
-                </div>
+              <p className="ref-hero-paragraph">
+                Order your favorite dishes from top restaurants in town.
+                We deliver deliciousness to your doorstep.
+                Hungry for convenience? <strong>Let's get started!</strong>
+              </p>
 
-                {/* Card 3: Loyalty Rewards */}
-                <div className="ref-feature-card card-3">
-                  <div className="ref-feature-icon-box">
-                    <svg viewBox="0 0 48 48" width="26" height="26" fill="none">
-                      {/* Gift Box SVG */}
-                      <rect x="10" y="20" width="28" height="20" rx="3" fill="#FC8019" />
-                      <rect x="8" y="14" width="32" height="6" rx="2" fill="#FA631C" />
-                      <line x1="24" y1="14" x2="24" y2="40" stroke="#FFEFE5" strokeWidth="3.5" />
-                      <path d="M24 14 C20 8 14 10 17 14 Z M24 14 C28 8 34 10 31 14 Z" fill="#FA631C" stroke="#FA631C" strokeWidth="1.5" />
-                    </svg>
-                  </div>
-                  <div className="ref-feature-text-box">
-                    <h3 className="ref-feature-title">Loyalty Rewards</h3>
-                    <p className="ref-feature-desc">Earn points & enjoy exciting rewards</p>
-                  </div>
-                </div>
+              <div className="ref-hero-cta-wrapper">
+                <button
+                  className="ref-hero-cta-button"
+                  onClick={onNavigateRestaurants}
+                >
+                  <span>Explore Restaurants</span>
+                  <ArrowRight size={18} className="ref-cta-arrow" />
+                </button>
               </div>
             </div>
 
-            {/* Right Column: 3D Photorealistic Food Composition */}
-            <div className="ref-hero-right-column">
-              <div className="ref-hero-food-stage">
-                <img
-                  src="/hero-3d-food.jpg"
-                  alt="Delicious 3D Cheeseburger, French Fries, Pizza, and Sushi"
-                  className="ref-hero-food-image"
-                  loading="eager"
-                />
+            {/* 3 Feature Cards (Below hero text) */}
+            <div className="ref-feature-cards-container">
+              {/* Card 1: Fast Delivery */}
+              <div className="ref-feature-card card-1">
+                <div className="ref-feature-icon-box">
+                  <Bike size={24} color="#FC8019" />
+                </div>
+                <div className="ref-feature-text-box">
+                  <h3 className="ref-feature-title">FAST DELIVERY</h3>
+                  <p className="ref-feature-desc">On-time delivery at your doorstep</p>
+                </div>
+              </div>
+
+              {/* Card 2: Exclusive Menus */}
+              <div className="ref-feature-card card-2">
+                <div className="ref-feature-icon-box">
+                  <UtensilsCrossed size={24} color="#FC8019" />
+                </div>
+                <div className="ref-feature-text-box">
+                  <h3 className="ref-feature-title">EXCLUSIVE MENUS</h3>
+                  <p className="ref-feature-desc">Special dishes &amp; exclusive offers</p>
+                </div>
+              </div>
+
+              {/* Card 3: Loyalty Rewards */}
+              <div className="ref-feature-card card-3">
+                <div className="ref-feature-icon-box">
+                  <Gift size={24} color="#FC8019" />
+                </div>
+                <div className="ref-feature-text-box">
+                  <h3 className="ref-feature-title">LOYALTY REWARDS</h3>
+                  <p className="ref-feature-desc">Earn points &amp; enjoy exciting rewards</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right-Side Visual Panel (Full-bleed visual occupying entire right box) */}
+          <div
+            className="ref-hero-right-panel"
+            role="img"
+            aria-label="Full-bleed gourmet food photography panel"
+          >
+            <div className="ref-hero-panel-overlay" />
+          </div>
+        </div>
+
+        {/* 5. Statistics Bar (Below hero section) */}
+        <div className="ref-stats-bar-wrapper">
+          <div className="ref-stats-bar-card">
+            <div className="ref-stat-item">
+              <div className="ref-stat-icon-wrap">
+                <Clock size={22} className="ref-stat-icon" />
+              </div>
+              <div className="ref-stat-text-wrap">
+                <span className="ref-stat-val">25–30 min</span>
+                <span className="ref-stat-lbl">Average Delivery</span>
+              </div>
+            </div>
+
+            <div className="ref-stat-divider" />
+
+            <div className="ref-stat-item">
+              <div className="ref-stat-icon-wrap">
+                <UserCheck size={22} className="ref-stat-icon" />
+              </div>
+              <div className="ref-stat-text-wrap">
+                <span className="ref-stat-val">500+</span>
+                <span className="ref-stat-lbl">Top Restaurants</span>
+              </div>
+            </div>
+
+            <div className="ref-stat-divider" />
+
+            <div className="ref-stat-item">
+              <div className="ref-stat-icon-wrap">
+                <Star size={22} className="ref-stat-icon" />
+              </div>
+              <div className="ref-stat-text-wrap">
+                <span className="ref-stat-val">4.6</span>
+                <span className="ref-stat-lbl">Average Rating</span>
+              </div>
+            </div>
+
+            <div className="ref-stat-divider" />
+
+            <div className="ref-stat-item">
+              <div className="ref-stat-icon-wrap">
+                <Users size={22} className="ref-stat-icon" />
+              </div>
+              <div className="ref-stat-text-wrap">
+                <span className="ref-stat-val">50K+</span>
+                <span className="ref-stat-lbl">Happy Customers</span>
               </div>
             </div>
           </div>
