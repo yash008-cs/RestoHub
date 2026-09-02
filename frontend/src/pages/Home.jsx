@@ -180,14 +180,13 @@ export const Home = ({
             </div>
           </div>
 
-          {/* Right-Side Visual Panel (Full-bleed visual occupying entire right box) */}
-          <div
-            className="ref-hero-right-panel"
-            role="img"
-            aria-label="Full-bleed gourmet food photography panel"
-          >
-            <div className="ref-hero-panel-overlay" />
-          </div>
+          {/* Master Gourmet Food Composition (Large Pizza + Complementary Food Elements) */}
+          <img
+            src="/images/hero-food-composition.png"
+            alt="Artisan Gourmet Pizza & Delicious Sides Composition"
+            className="ref-hero-food-composition"
+            loading="eager"
+          />
         </div>
 
         {/* 5. Statistics Bar (Below hero section) */}
