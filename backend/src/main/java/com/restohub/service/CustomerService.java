@@ -44,8 +44,10 @@ public class CustomerService {
         Customer customer = new Customer();
         customer.setName(cleanName);
         customer.setPhone(cleanPhone);
-        customer.setPassword(passwordEncoder.encode(cleanPassword));
-        customer.setEmail(cleanPhone + "@restohub.app");
+        String cleanEmail = request.getEmail() != null && !request.getEmail().isBlank()
+                ? request.getEmail().trim().toLowerCase()
+                : cleanPhone + "@restohub.app";
+        customer.setEmail(cleanEmail);
 
         Customer savedCustomer = customerRepository.save(customer);
         log.info("Successfully registered customer in database: id={}, phone={}", savedCustomer.getId(), savedCustomer.getPhone());

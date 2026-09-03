@@ -61,10 +61,19 @@ public class AuthService {
             throw new DuplicateResourceException("This mobile number is already registered.");
         }
 
+        // Determine customer email: use entered email if provided, otherwise fallback to <phone>@restohub.app
+        String cleanEmail = request.getEmail() != null && !request.getEmail().isBlank()
+                ? request.getEmail().trim().toLowerCase()
+                : cleanPhone + "@restohub.app";
+
+        if (cleanEmail != null && !cleanEmail.isBlank() && customerRepository.findByEmailIgnoreCase(cleanEmail).isPresent()) {
+            throw new DuplicateResourceException("This email address is already registered.");
+        }
+
         // Hash password securely using BCrypt
         String hashedPassword = passwordEncoder.encode(rawPassword.trim());
 
-        Customer customer = new Customer(null, cleanName, cleanPhone, hashedPassword);
+        Customer customer = new Customer(null, cleanName, cleanEmail, cleanPhone, hashedPassword);
         customer.setRole(Role.CUSTOMER);
         Customer savedCustomer = customerRepository.save(customer);
 
