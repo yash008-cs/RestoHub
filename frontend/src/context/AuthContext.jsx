@@ -77,17 +77,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register with Name, Phone Number + Password
-  const register = async ({ name, phoneNumber, password }) => {
+  // Register with Name, Email, Phone Number + Password
+  const register = async ({ name, email, phoneNumber, password }) => {
     setAuthError(null);
     try {
       setLoading(true);
-      const res = await authService.register({ name, phoneNumber, password });
+      const res = await authService.register({ name, email, phoneNumber, password });
       const newCustomer = res.customer;
 
       if (newCustomer) {
+        if (email) newCustomer.email = email;
         setActiveUser(newCustomer);
-        sessionStorage.setItem('restohub_user_id', newCustomer.id);
+        sessionStorage.setItem('restohub_user_id', String(newCustomer.id));
+        localStorage.setItem('restohub_user_id', String(newCustomer.id));
       }
       setIsAuthModalOpen(false);
 

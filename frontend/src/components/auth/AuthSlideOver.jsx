@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { X, Lock, User, AlertCircle, Eye, EyeOff, ArrowLeft, Mail, KeyRound, CheckCircle2, Phone } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Lock, User, AlertCircle, Eye, EyeOff, ArrowLeft, Mail, KeyRound, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
 
@@ -18,6 +18,7 @@ export const AuthSlideOver = () => {
   // Mode: 'login' | 'register' | 'forgot-password' | 'verify-otp' | 'reset-password'
   const [formData, setFormData] = useState({
     name: '',
+    email: '', // email for register
     identifier: '', // email or phone for login
     phoneNumber: '', // for register
     password: '',
@@ -53,9 +54,10 @@ export const AuthSlideOver = () => {
       setLocalSuccess('');
       setShowPassword(false);
       setShowConfirmPassword(false);
-      if (authModalMode === 'login' || authModalMode === 'forgot-password') {
+      if (authModalMode === 'login' || authModalMode === 'forgot-password' || authModalMode === 'register') {
         setFormData({
           name: '',
+          email: '',
           identifier: '',
           phoneNumber: '',
           password: '',
@@ -69,26 +71,16 @@ export const AuthSlideOver = () => {
     }
   }, [isAuthModalOpen, authModalMode]);
 
-  if (!isAuthModalOpen) return null;
-
-  const isRegister = authModalMode === 'register';
-  const isForgotPassword = authModalMode === 'forgot-password';
-  const isVerifyOtp = authModalMode === 'verify-otp';
-  const isResetPassword = authModalMode === 'reset-password';
-  const isLogin = authModalMode === 'login';
-
   const loginIdentifierInputRef = useRef(null);
 
   // Smart automated identifier detection for Login:
   // - Starts typing digits or pasted numbers -> activate phone mode (+91 appears)
   // - Starts typing letters or email symbols -> remain in standard email mode
-  const isPhoneMode = useMemo(() => {
-    const val = formData.identifier;
-    if (!val) return false;
-    const trimmed = val.trim();
-    if (trimmed.startsWith('+')) return true;
-    return /^\d/.test(trimmed) && !/[a-zA-Z@]/.test(trimmed);
-  }, [formData.identifier]);
+  const trimmedId = (formData.identifier || '').trim();
+  const isPhoneMode = Boolean(
+    trimmedId.startsWith('+') ||
+    (/^\d/.test(trimmedId) && !/[a-zA-Z@]/.test(trimmedId))
+  );
 
   // Keep focus and cursor position smooth when phone mode toggles
   const prevIsPhoneMode = useRef(isPhoneMode);
@@ -101,6 +93,12 @@ export const AuthSlideOver = () => {
       }
     }
   }, [isPhoneMode]);
+
+  const isRegister = authModalMode === 'register';
+  const isForgotPassword = authModalMode === 'forgot-password';
+  const isVerifyOtp = authModalMode === 'verify-otp';
+  const isResetPassword = authModalMode === 'reset-password';
+  const isLogin = authModalMode === 'login';
 
   const handleIdentifierChange = (e) => {
     let val = e.target.value;
@@ -147,6 +145,7 @@ export const AuthSlideOver = () => {
     setShowConfirmPassword(false);
     setFormData({
       name: '',
+      email: '',
       identifier: '',
       phoneNumber: '',
       password: '',
@@ -191,28 +190,24 @@ export const AuthSlideOver = () => {
     setLocalError('');
     setLocalSuccess('');
 
-    const email = formData.resetEmail?.trim();
-    if (!email) {
-      setLocalError('Please enter your registered email address.');
-      return;
-    }
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setLocalError('Please enter a valid email address.');
+    const input = formData.resetEmail?.trim();
+    if (!input) {
+      setLocalError('Please enter your registered email address or mobile number.');
       return;
     }
 
     try {
       setIsSubmitting(true);
       setFormData((prev) => ({ ...prev, otp: '' }));
-      const res = await authService.forgotPassword(email);
-      setLocalSuccess(res.message || 'Verification code sent to your email.');
+      const res = await authService.forgotPassword(input);
+      setLocalSuccess(res.message || 'Verification code sent to your registered email.');
       setCooldown(60); // 60s cooldown
       // Transition to OTP verification step
       setTimeout(() => {
         handleSwitchMode('verify-otp');
-      }, 900);
+      }, 700);
     } catch (err) {
-      setLocalError(err.message || 'No account found with this email.');
+      setLocalError(err.message || 'No account found with this email address.');
     } finally {
       setIsSubmitting(false);
     }
@@ -228,7 +223,7 @@ export const AuthSlideOver = () => {
     const otp = formData.otp?.trim();
 
     if (!otp || otp.length !== 6) {
-      setLocalError('Please enter the 6-digit verification code.');
+      setLocalError('Please enter the 6-digit verification code sent to your email.');
       return;
     }
 
@@ -236,8 +231,7 @@ export const AuthSlideOver = () => {
       setIsSubmitting(true);
       const res = await authService.verifyResetOtp(email, otp);
       if (res.success) {
-        setLocalSuccess('Code verified successfully.');
-        // Immediately clear the verified OTP so it disappears and never reappears
+        setLocalSuccess('Email verified successfully.');
         setFormData((prev) => ({ ...prev, otp: '' }));
         setTimeout(() => {
           handleSwitchMode('reset-password');
@@ -263,7 +257,7 @@ export const AuthSlideOver = () => {
     try {
       setIsSubmitting(true);
       const res = await authService.resendResetOtp(email);
-      setLocalSuccess(res.message || 'A new verification code has been sent.');
+      setLocalSuccess(res.message || 'A new verification code has been sent to your email.');
       setCooldown(60);
     } catch (err) {
       setLocalError(err.message || 'Could not resend code. Please try again.');
@@ -323,6 +317,15 @@ export const AuthSlideOver = () => {
         setLocalError('Please enter your full name.');
         return;
       }
+      const cleanEmail = (formData.email || '').trim();
+      if (!cleanEmail) {
+        setLocalError('Please enter your email address.');
+        return;
+      }
+      if (!cleanEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        setLocalError('Please enter a valid email address.');
+        return;
+      }
       if (!formData.phoneNumber || formData.phoneNumber.length !== 10) {
         setLocalError('Please enter a valid 10-digit mobile number.');
         return;
@@ -339,6 +342,7 @@ export const AuthSlideOver = () => {
       try {
         await register({
           name: formData.name.trim(),
+          email: cleanEmail,
           phoneNumber: formData.phoneNumber.trim(),
           password: formData.password.trim(),
         });
@@ -388,6 +392,8 @@ export const AuthSlideOver = () => {
   };
 
   const isLoading = authLoading || isSubmitting;
+
+  if (!isAuthModalOpen) return null;
 
   return (
     <div className="auth-overlay-wrapper">
@@ -510,9 +516,26 @@ export const AuthSlideOver = () => {
               </div>
 
               <div className="auth-input-group">
+                <label className="auth-input-label">EMAIL ADDRESS</label>
+                <div className="auth-input-wrapper">
+                  <Mail size={18} className="auth-field-icon" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email address"
+                    className="auth-text-input"
+                    autoComplete="email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="auth-input-group">
                 <label className="auth-input-label">MOBILE NUMBER</label>
                 <div className="phone-prefix-input-box">
-                  <div className="country-code-prefix">+91</div>
+                  <div className="country-code-prefix select-none">+91</div>
                   <span className="phone-prefix-divider">|</span>
                   <input
                     type="tel"
@@ -595,10 +618,7 @@ export const AuthSlideOver = () => {
                 >
                   {isPhoneMode ? (
                     <>
-                      <div className="country-code-prefix flex items-center gap-1.5 select-none">
-                        <Phone size={16} className="text-orange-500" />
-                        <span>+91</span>
-                      </div>
+                      <div className="country-code-prefix select-none">+91</div>
                       <span className="phone-prefix-divider">|</span>
                     </>
                   ) : (
@@ -703,17 +723,17 @@ export const AuthSlideOver = () => {
           {isForgotPassword && (
             <form onSubmit={handleForgotPasswordSubmit} className="auth-form-element">
               <div className="auth-input-group">
-                <label className="auth-input-label">REGISTERED EMAIL ADDRESS</label>
+                <label className="auth-input-label">REGISTERED EMAIL OR MOBILE NUMBER</label>
                 <div className="auth-input-wrapper">
                   <Mail size={18} className="auth-field-icon" />
                   <input
-                    type="email"
+                    type="text"
                     name="resetEmail"
                     value={formData.resetEmail}
                     onChange={handleChange}
-                    placeholder="Enter your registered email"
+                    placeholder="Enter registered email or 10-digit mobile"
                     className="auth-text-input"
-                    autoComplete="email"
+                    autoComplete="username"
                     required
                   />
                 </div>
@@ -732,9 +752,26 @@ export const AuthSlideOver = () => {
           {/* MODE: VERIFY OTP (STEP 2) */}
           {isVerifyOtp && (
             <form onSubmit={handleVerifyOtpSubmit} className="auth-form-element">
-              <p style={{ margin: '-0.35rem 0 0.35rem 0', color: '#64748b', fontSize: '0.88rem' }}>
-                Enter the 6-digit code sent to <strong style={{ color: '#0f172a' }}>{formData.resetEmail}</strong>
-              </p>
+              <div
+                style={{
+                  background: '#fff7ed',
+                  border: '1px solid #fed7aa',
+                  borderRadius: '12px',
+                  padding: '12px 14px',
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                }}
+              >
+                <Mail size={22} style={{ color: '#ea580c', flexShrink: 0 }} />
+                <div style={{ fontSize: '0.85rem', color: '#9a3412', lineHeight: '1.35' }}>
+                  A 6-digit verification code was sent to:
+                  <br />
+                  <strong style={{ color: '#7c2d12', fontWeight: 700 }}>{formData.resetEmail}</strong>
+                </div>
+              </div>
+
               <div className="auth-input-group">
                 <label className="auth-input-label">6-DIGIT VERIFICATION CODE</label>
                 <div className="auth-input-wrapper">
@@ -744,11 +781,11 @@ export const AuthSlideOver = () => {
                     name="otp"
                     value={formData.otp}
                     onChange={handleChange}
-                    placeholder=""
+                    placeholder="Enter 6-digit code from email"
                     className="auth-text-input"
                     maxLength={6}
-                    style={{ letterSpacing: '0.35rem', fontWeight: 'bold', fontSize: '1.1rem' }}
-                    autoComplete="off"
+                    style={{ letterSpacing: '0.25rem', fontWeight: 'bold', fontSize: '1.1rem' }}
+                    autoComplete="one-time-code"
                     required
                   />
                 </div>
