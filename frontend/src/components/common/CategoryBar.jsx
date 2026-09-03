@@ -1,5 +1,5 @@
 import React from 'react';
-import { getCategoryImage, handleImageError } from '../../utils/imageMapper';
+import { getCategoryImage, handleImageError, FALLBACK_FOOD_IMAGE } from '../../utils/imageMapper';
 
 export const CATEGORIES_LIST = [
   { id: 'biryani', name: 'Biryani', icon: '🍲', label: 'Biryani' },
@@ -57,7 +57,7 @@ export const CategoryBar = ({ selectedCategory, onSelectCategory }) => {
                   src={imageUrl}
                   alt={cat.name}
                   className="category-thumb-img"
-                  onError={(e) => handleImageError(e, imageUrl)}
+                  onError={(e) => handleImageError(e, FALLBACK_FOOD_IMAGE)}
                   loading="lazy"
                 />
                 <span className="category-emoji-badge">{cat.icon}</span>

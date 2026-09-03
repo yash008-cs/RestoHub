@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, Lock, User, AlertCircle, Eye, EyeOff, ArrowLeft, Mail, KeyRound, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { X, Lock, User, AlertCircle, Eye, EyeOff, ArrowLeft, Mail, KeyRound, CheckCircle2, Phone } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
 
@@ -76,6 +76,53 @@ export const AuthSlideOver = () => {
   const isVerifyOtp = authModalMode === 'verify-otp';
   const isResetPassword = authModalMode === 'reset-password';
   const isLogin = authModalMode === 'login';
+
+  const loginIdentifierInputRef = useRef(null);
+
+  // Smart automated identifier detection for Login:
+  // - Starts typing digits or pasted numbers -> activate phone mode (+91 appears)
+  // - Starts typing letters or email symbols -> remain in standard email mode
+  const isPhoneMode = useMemo(() => {
+    const val = formData.identifier;
+    if (!val) return false;
+    const trimmed = val.trim();
+    if (trimmed.startsWith('+')) return true;
+    return /^\d/.test(trimmed) && !/[a-zA-Z@]/.test(trimmed);
+  }, [formData.identifier]);
+
+  // Keep focus and cursor position smooth when phone mode toggles
+  const prevIsPhoneMode = useRef(isPhoneMode);
+  useEffect(() => {
+    if (prevIsPhoneMode.current !== isPhoneMode && loginIdentifierInputRef.current) {
+      prevIsPhoneMode.current = isPhoneMode;
+      if (document.activeElement === loginIdentifierInputRef.current) {
+        const len = loginIdentifierInputRef.current.value.length;
+        loginIdentifierInputRef.current.setSelectionRange(len, len);
+      }
+    }
+  }, [isPhoneMode]);
+
+  const handleIdentifierChange = (e) => {
+    let val = e.target.value;
+
+    // Strip leading +91 or + if typed or pasted
+    if (val.startsWith('+91')) {
+      val = val.slice(3).trim();
+    } else if (val.startsWith('+')) {
+      val = val.slice(1).trim();
+    }
+
+    // If starts with digit and has no letters/@, treat as mobile number
+    if (/^\d/.test(val.trim()) && !/[a-zA-Z@]/.test(val)) {
+      let digits = val.replace(/[^0-9]/g, '');
+      if (digits.length > 10) digits = digits.slice(0, 10);
+      setFormData((prev) => ({ ...prev, identifier: digits }));
+    } else {
+      // Standard email or text credentials
+      setFormData((prev) => ({ ...prev, identifier: val }));
+    }
+    setLocalError('');
+  };
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -305,6 +352,17 @@ export const AuthSlideOver = () => {
         setLocalError('Please enter your email or 10-digit mobile number.');
         return;
       }
+      if (isPhoneMode) {
+        if (idInput.length !== 10) {
+          setLocalError('Please enter a valid 10-digit mobile number.');
+          return;
+        }
+      } else if (idInput.includes('@')) {
+        if (!idInput.match(/^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)) {
+          setLocalError('Please enter a valid email address.');
+          return;
+        }
+      }
       if (!formData.password) {
         setLocalError('Please enter your password.');
         return;
@@ -372,12 +430,30 @@ export const AuthSlideOver = () => {
               marginBottom: '1.5rem',
             }}
           >
-            <img
-              src="/restohub-logo.png"
-              alt="RestoHub Logo"
-              className="auth-brand-logo-img"
-              style={{ width: '42px', height: '42px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }}
-            />
+            <div
+              className="ref-cloche-icon"
+              style={{
+                width: '42px',
+                height: '42px',
+                borderRadius: '12px',
+                background: '#fff7ed',
+                border: '1px solid #ffedd5',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+              title="RestoHub"
+            >
+              <svg viewBox="0 0 40 32" width="30" height="24" fill="none">
+                <circle cx="20" cy="5" r="3" fill="#FC8019" />
+                <path
+                  d="M6 21 C6 11 12 7 20 7 C28 7 34 11 34 21 Z"
+                  fill="#FC8019"
+                />
+                <rect x="3" y="23" width="34" height="4" rx="2" fill="#FC8019" />
+              </svg>
+            </div>
             <h2
               className="auth-main-title"
               style={{
@@ -510,19 +586,61 @@ export const AuthSlideOver = () => {
           {isLogin && (
             <form onSubmit={handleAuthSubmit} className="auth-form-element" autoComplete="off">
               <div className="auth-input-group">
-                <label className="auth-input-label">EMAIL OR MOBILE NUMBER</label>
-                <div className="auth-input-wrapper">
-                  <Mail size={18} className="auth-field-icon" />
+                <label className="auth-input-label">
+                  {isPhoneMode ? 'MOBILE NUMBER' : 'EMAIL OR MOBILE NUMBER'}
+                </label>
+                <div
+                  className={isPhoneMode ? 'phone-prefix-input-box' : 'auth-input-wrapper'}
+                  style={{ transition: 'all 0.2s ease' }}
+                >
+                  {isPhoneMode ? (
+                    <>
+                      <div className="country-code-prefix flex items-center gap-1.5 select-none">
+                        <Phone size={16} className="text-orange-500" />
+                        <span>+91</span>
+                      </div>
+                      <span className="phone-prefix-divider">|</span>
+                    </>
+                  ) : (
+                    <Mail size={18} className="auth-field-icon" />
+                  )}
                   <input
-                    type="text"
+                    ref={loginIdentifierInputRef}
+                    type={isPhoneMode ? 'tel' : 'text'}
                     name="identifier"
                     value={formData.identifier}
-                    onChange={handleChange}
-                    placeholder="Enter email or 10-digit mobile"
-                    className="auth-text-input"
-                    autoComplete="off"
+                    onChange={handleIdentifierChange}
+                    placeholder={isPhoneMode ? 'Enter 10-digit mobile' : 'Enter email or 10-digit mobile'}
+                    className={isPhoneMode ? 'phone-number-field' : 'auth-text-input'}
+                    style={isPhoneMode ? { paddingLeft: 0 } : undefined}
+                    maxLength={isPhoneMode ? 10 : 80}
+                    autoComplete={isPhoneMode ? 'tel-national' : 'username'}
                     required
                   />
+                  {formData.identifier && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData((prev) => ({ ...prev, identifier: '' }));
+                        loginIdentifierInputRef.current?.focus();
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#94a3b8',
+                        cursor: 'pointer',
+                        padding: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: isPhoneMode ? 'static' : 'absolute',
+                        right: isPhoneMode ? undefined : '12px',
+                      }}
+                      title="Clear input"
+                    >
+                      <X size={16} />
+                    </button>
+                  )}
                 </div>
               </div>
 

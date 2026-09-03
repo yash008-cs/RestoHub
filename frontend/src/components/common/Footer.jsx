@@ -7,7 +7,28 @@ export const Footer = () => {
       <div className="footer-container">
         <div className="footer-brand-col">
           <div className="footer-logo">
-            <img src="/restohub-logo.png" alt="RestoHub Logo" className="footer-brand-logo-img" />
+            <div
+              className="ref-cloche-icon"
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <svg viewBox="0 0 40 32" width="24" height="20" fill="none">
+                <circle cx="20" cy="5" r="3" fill="#FC8019" />
+                <path
+                  d="M6 21 C6 11 12 7 20 7 C28 7 34 11 34 21 Z"
+                  fill="#FC8019"
+                />
+                <rect x="3" y="23" width="34" height="4" rx="2" fill="#FC8019" />
+              </svg>
+            </div>
             <span className="logo-title">RestoHub</span>
           </div>
           <p className="footer-tagline">Delicious Food. Delivered Fast.</p>

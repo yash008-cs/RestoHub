@@ -11,7 +11,7 @@ export const OfferBanner = ({ onSelectOffer }) => {
       subtitle: 'Use code RESTO50 on your first order',
       code: 'RESTO50',
       bgClass: 'offer-card-red',
-      img: '/banner-pizza-3d.png',
+      imgFileName: 'banner-pizza-3d.png',
       icon: <Tag size={16} />,
     },
     {
@@ -21,7 +21,7 @@ export const OfferBanner = ({ onSelectOffer }) => {
       subtitle: 'On orders above ₹199 across Pune',
       code: 'FREEDEL',
       bgClass: 'offer-card-purple',
-      img: '/banner-roll-3d.png',
+      imgFileName: 'banner-roll-3d.png',
       icon: <Truck size={16} />,
     },
     {
@@ -31,7 +31,7 @@ export const OfferBanner = ({ onSelectOffer }) => {
       subtitle: 'On gourmet biryanis & combos',
       code: 'GOURMET150',
       bgClass: 'offer-card-blue',
-      img: '/banner-biryani-3d.png',
+      imgFileName: 'banner-biryani-3d.png',
       icon: <Sparkles size={16} />,
     },
   ];
@@ -69,7 +69,25 @@ export const OfferBanner = ({ onSelectOffer }) => {
 
             {/* 3D Popout Food Plate Graphic */}
             <div className="offer-popout-graphic-container">
-              <img src={offer.img} alt={offer.title} className="offer-popout-food-img" loading="lazy" />
+              <img
+                src={`${import.meta.env.BASE_URL}images/${offer.imgFileName}`}
+                alt={offer.title}
+                className="offer-popout-food-img"
+                loading="lazy"
+                onError={(e) => {
+                  if (!e.currentTarget.dataset.fallbackTried) {
+                    e.currentTarget.dataset.fallbackTried = 'true';
+                    e.currentTarget.src = `${import.meta.env.BASE_URL}${offer.imgFileName}`;
+                    return;
+                  }
+                  if (!e.currentTarget.dataset.rootFallbackTried) {
+                    e.currentTarget.dataset.rootFallbackTried = 'true';
+                    e.currentTarget.src = `/${offer.imgFileName}`;
+                    return;
+                  }
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
             </div>
           </div>
         ))}

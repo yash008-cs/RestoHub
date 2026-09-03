@@ -20,7 +20,7 @@ const POPULAR_CUISINES = [
   { id: 'sandwich', name: 'Sandwiches', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=300&q=80', category: 'Sandwiches' },
   { id: 'momos', name: 'Momos', image: 'https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?auto=format&fit=crop&w=300&q=80', category: 'Chinese & Asian' },
   { id: 'biryani', name: 'Biryani', image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=300&q=80', category: 'Biryani & Rice' },
-  { id: 'maharashtrian', name: 'Maharashtrian', image: '/misal-pav-authentic.png', category: 'Maharashtrian' },
+  { id: 'maharashtrian', name: 'Maharashtrian', image: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=300&q=80', category: 'Maharashtrian' },
 ];
 
 export const SearchPage = ({ searchQuery, setSearchQuery, onSelectRestaurant, activeOfferFilter, setActiveOfferFilter }) => {

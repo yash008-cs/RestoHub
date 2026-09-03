@@ -94,11 +94,11 @@ const EXACT_DISH_PHOTOS = [
     url: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=600&q=80' // Spiced mixed vegetarian curries
   },
   {
-    keys: ['butter naan', 'garlic naan', 'naan'],
+    keys: ['butter naan', 'garlic naan', 'naan', 'paratha', 'butter paratha'],
     url: '/butter-naan.png' // Authentic charred golden butter naan brushed with butter and coriander
   },
   {
-    keys: ['tandoori roti', 'roti', 'paratha', 'kulche'],
+    keys: ['tandoori roti', 'roti', 'kulche'],
     url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80' // Charred tandoori flatbread
   },
 
@@ -341,7 +341,7 @@ const CATEGORY_IMAGE_MAP = {
   'south-indian': 'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=400&q=80',
   chinese: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80',
   'north-indian': 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=400&q=80',
-  maharashtrian: '/misal-pav-authentic.png',
+  maharashtrian: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&w=400&q=80',
   snacks: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=400&q=80',
   beverages: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=400&q=80',
   desserts: 'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&w=400&q=80',
@@ -382,7 +382,11 @@ export const getFoodImage = (food) => {
   for (const entry of EXACT_DISH_PHOTOS) {
     for (const key of entry.keys) {
       if (dishName === key || dishName.includes(key)) {
-        return entry.url;
+        let u = entry.url;
+        if (u.startsWith('/')) {
+          u = `${import.meta.env.BASE_URL}${u.slice(1)}`;
+        }
+        return u;
       }
     }
   }
@@ -416,7 +420,11 @@ export const getFoodImage = (food) => {
  * Get category cover image
  */
 export const getCategoryImage = (catId) => {
-  return CATEGORY_IMAGE_MAP[catId] || FALLBACK_FOOD_IMAGE;
+  let img = CATEGORY_IMAGE_MAP[catId] || FALLBACK_FOOD_IMAGE;
+  if (img && img.startsWith('/')) {
+    img = `${import.meta.env.BASE_URL}${img.slice(1)}`;
+  }
+  return img;
 };
 
 /**

@@ -2,16 +2,12 @@ import axios from 'axios';
 
 // Dynamically determine API Base URL:
 // 1. Explicit VITE_API_BASE_URL environment variable if provided
-// 2. If running locally (localhost or 127.0.0.1), connect to local backend http://localhost:8080
-// 3. Otherwise fallback to deployed AWS backend http://43.204.130.230:8080
+// 2. Otherwise fallback to deployed AWS backend http://13.204.64.220:8080
 const getApiBaseUrl = () => {
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL;
   }
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return 'http://localhost:8080';
-  }
-  return 'http://43.204.130.230:8080';
+  return 'http://13.204.64.220:8080';
 };
 
 const API_BASE_URL = getApiBaseUrl();

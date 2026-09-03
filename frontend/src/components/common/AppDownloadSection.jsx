@@ -119,10 +119,22 @@ export const AppDownloadSection = () => {
         <div className="app-download-visual-wrap">
           <div className="app-mockup-frame">
             <img
-              src="/restohub-app-mockup.jpg"
+              src={`${import.meta.env.BASE_URL}images/restohub-app-mockup.jpg`}
               alt="RestoHub Mobile App Screen"
               className="app-mockup-image"
               loading="lazy"
+              onError={(e) => {
+                if (!e.currentTarget.dataset.fallbackTried) {
+                  e.currentTarget.dataset.fallbackTried = 'true';
+                  e.currentTarget.src = '/images/restohub-app-mockup.jpg';
+                  return;
+                }
+                if (!e.currentTarget.dataset.rootFallbackTried) {
+                  e.currentTarget.dataset.rootFallbackTried = 'true';
+                  e.currentTarget.src = '/restohub-app-mockup.jpg';
+                  return;
+                }
+              }}
             />
             {/* Floating micro badges */}
             <div className="app-floating-badge top-right">

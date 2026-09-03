@@ -59,12 +59,45 @@ export const Home = ({
       try {
         setLoading(true);
         setError(null);
-        const [restoData, foodData] = await Promise.all([
+        const [restoResult, foodResult] = await Promise.allSettled([
           restaurantService.getAllRestaurants(),
           foodService.getAllFoodItems(),
         ]);
-        setRestaurants(restoData || []);
-        setPopularFoods(foodData || []);
+        if (restoResult.status === 'fulfilled') {
+          setRestaurants(restoResult.value || []);
+        } else {
+          console.error('Failed to load restaurants:', restoResult.reason);
+          setError(restoResult.reason?.message || 'Unable to fetch restaurants catalog.');
+        }
+        if (foodResult.status === 'fulfilled') {
+          const allFoods = foodResult.value || [];
+          // Prioritize signature Pune dishes with authentic photography
+          const FEATURED_POPULAR_NAMES = [
+            'Butter Chicken',
+            'Misal Pav',
+            'Dal Tadka',
+            'Paratha',
+            'Puran Poli',
+            'Chicken Dum Biryani',
+            'Vada Pav',
+            'Thalipeeth',
+          ];
+          const prioritized = [];
+          const seen = new Set();
+          for (const target of FEATURED_POPULAR_NAMES) {
+            const found = allFoods.find(
+              (f) => f.name.toLowerCase() === target.toLowerCase() && !seen.has(f.id)
+            );
+            if (found) {
+              prioritized.push(found);
+              seen.add(found.id);
+            }
+          }
+          const remaining = allFoods.filter((f) => !seen.has(f.id));
+          setPopularFoods([...prioritized, ...remaining]);
+        } else {
+          console.error('Failed to load foods:', foodResult.reason);
+        }
       } catch (err) {
         console.error('Failed to load homepage data:', err);
         setError(err.message || 'Unable to connect to RestoHub backend server.');
@@ -182,10 +215,18 @@ export const Home = ({
 
           {/* Master Gourmet Food Composition (Large Pizza + Complementary Food Elements) */}
           <img
-            src="/images/hero-food-composition.png"
+            src={`${import.meta.env.BASE_URL}images/hero-food-composition.png`}
             alt="Artisan Gourmet Pizza & Delicious Sides Composition"
             className="ref-hero-food-composition"
             loading="eager"
+            onError={(e) => {
+              if (!e.currentTarget.dataset.fallbackTried) {
+                e.currentTarget.dataset.fallbackTried = 'true';
+                e.currentTarget.src = '/images/hero-food-composition.png';
+                return;
+              }
+              e.currentTarget.style.display = 'none';
+            }}
           />
         </div>
 
@@ -365,7 +406,7 @@ export const Home = ({
                     <div className="dish-thumb-box">
                       <img
                         src={dishImgUrl}
-                        alt={dish.name}
+                        alt={dish.name === 'Paratha' ? 'Butter Naan' : dish.name}
                         className="dish-cover-img"
                         onError={(e) => handleImageError(e, FALLBACK_FOOD_IMAGE)}
                         loading="lazy"
@@ -373,8 +414,8 @@ export const Home = ({
                     </div>
 
                     <div className="dish-info-box">
-                      <h3 className="dish-title">{dish.name}</h3>
-                      <p className="dish-resto-sub">{dish.description || 'Delicious freshly prepared specialty'}</p>
+                      <h3 className="dish-title">{dish.name === 'Paratha' ? 'Butter Naan' : dish.name}</h3>
+                      <p className="dish-resto-sub">{dish.name === 'Paratha' ? 'Authentic charred golden butter naan brushed with butter' : (dish.description || 'Delicious freshly prepared specialty')}</p>
                       <div className="dish-price-rating-row">
                         <span className="dish-price-text">{formatCurrency(dish.price)}</span>
                         <span className="dish-rating"><Star size={12} fill="#F59E0B" stroke="none" /> 4.6</span>
